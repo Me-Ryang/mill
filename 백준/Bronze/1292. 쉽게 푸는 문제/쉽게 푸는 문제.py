@@ -1,9 +1,11 @@
-a, b = list(map(int, input().split()))
+A, B = map(int, input().split())
 
-seq = []
+lst = []
+for i in range(1, 1+B):
+    lst += [i]*i
 
-for i in range(1, b+1):
-  for j in range(i):
-    seq.append(i)
+ans = 0
+for i in range(A-1, B):
+    ans += lst[i]
 
-print(sum(seq[a-1:b]))
+print(ans)

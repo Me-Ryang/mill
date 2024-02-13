@@ -1,11 +1,15 @@
-import itertools
+def nnm():
+    if len(lst) == M:
+        print(*lst)
+        return
+
+    for n in range(1, N+1):
+        if n not in lst:
+            lst.append(n)
+            nnm()
+            lst.pop()
 
 N, M = map(int, input().split())
-num = list(range(1, N + 1))
+lst = []
 
-arr = itertools.permutations(num, M)
-
-for tp in arr:
-    for per in tp:
-        print(per, end = ' ')
-    print()
+nnm()

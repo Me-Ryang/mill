@@ -3,11 +3,10 @@ def family(s, g):
     if s == G:
         return visited[s]
     
-    else:
-        for i in rel[s]:
-            if visited[i] == -1:
-                visited[i] = visited[s] + 1
-                family(i, g)
+    for i in rel[s]:
+        if visited[i] == -1:
+            visited[i] = visited[s] + 1
+            family(i, g)
         
     return visited[G]
          

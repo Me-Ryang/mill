@@ -1,41 +1,41 @@
-import sys
 from collections import deque
 from itertools import combinations
+from copy import deepcopy
 
 N, M = map(int, input().split())
-arr = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
+city = [list(map(int, input().split())) for _ in range(N)]
+answer = 999999999
 
 dr = [-1, 0, 1, 0]
 dc = [0, 1, 0, -1]
 
-def chicken(lst):
-
-    check = lst
-    q = deque(lst)
-    dis = 0
-
-    while q:
-        x, y = q.popleft()
-        for k in range(4):
-            nx = x + dr[k]
-            ny = y + dc[k]
-            if 0 <= nx < N and 0 <= ny < N and visited[nx][ny] == 0 and (nx, ny) not in check:
-                visited[nx][ny] = visited[x][y] + 1
-                q.append((nx, ny))
-                if arr[nx][ny] == 1:
-                    dis += visited[nx][ny]
-
-    return dis
-
-loc = []
+chicken = []
 for i in range(N):
     for j in range(N):
-        if arr[i][j] == 2:
-            loc.append((i, j))
+        if city[i][j] == 2:
+            chicken.append((i, j))
 
-com = list(combinations(loc, M))
-ans = int(1e9)
-for r in range(len(com)):
+comb_chicken = list(combinations(chicken, M))
+
+for drive in comb_chicken:
+    loc = deque(drive)
+    new_city = deepcopy(city)
     visited = [[0] * N for _ in range(N)]
-    ans = min(ans, chicken(com[r]))
-print(ans)
+    for i in range(M):
+        new_city[loc[i][0]][loc[i][1]] = 3
+    result = 0
+    while loc:
+        start = loc.popleft()
+        r, c = start[0], start[1]
+        for k in range(4):
+            nr = r + dr[k]
+            nc = c + dc[k]
+            if 0 <= nr < N and 0 <= nc < N and new_city[nr][nc] != 3 and visited[nr][nc] == 0:
+                if city[nr][nc] == 1:
+                    result += visited[r][c] + 1
+                    new_city[nr][nc] = 0
+                visited[nr][nc] = visited[r][c] + 1
+                loc.append((nr, nc))
+    answer = min(answer, result)
+
+print(answer)

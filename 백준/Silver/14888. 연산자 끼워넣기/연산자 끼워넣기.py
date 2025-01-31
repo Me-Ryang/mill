@@ -1,93 +1,36 @@
-import sys
-from collections import deque
+N = int(input())
+A = list(map(int, input().split()))
+add, sub, mul, div = map(int, input().split())
 
-p = {"*" : 1, "/" : 1, "+" : 1, "-" : 1}
+max_v = -int(1e9) # -가 최댓값일 경우
+min_v = int(1e9)
 
-def change(string):
+def cal(i, data):
 
-    lst = []
-    word = ""
-    for i in string:
-        if i not in "+*/-":
-            word += i
-        else:
-            lst.append(int(word))
-            lst.append(i)
-            word =""
-    lst.append(int(word))
+    global add, sub, mul, div, max_v, min_v
 
-    return lst
+    if i == N:
+        max_v = max(max_v, data)
+        min_v = min(min_v, data)
 
+    else:
+        if add:
+            add -= 1
+            cal(i + 1, data + A[i])
+            add += 1
+        if sub:
+            sub -= 1
+            cal(i + 1, data - A[i])
+            sub += 1
+        if mul:
+            mul -= 1
+            cal(i + 1, data * A[i])
+            mul += 1
+        if div:
+            div -= 1
+            cal(i + 1, -(abs(data) // A[i]) if data < 0 else data // A[i])
+            div += 1
 
-def dfs(string, lv):
-
-    if len(string) == n + len(cal_lst)-1:
-        result.append(string)
-        return
-
-    for i in range(1, len(lst)):
-        if visited[i] == 0:
-            visited[i] = 1
-            stack.append(string + str(cal_lst[i]))
-            dfs(string + str(cal_lst[i])+str(lst[lv-1]), lv+1)
-            stack.pop()
-            visited[i] = 0
-
-
-def calculate(lst):
-
-    queue = deque()
-    for i in range(len(lst)):
-        if i%2 == 0:
-            queue.append(lst[i])
-    
-    for j in range(len(lst)):
-        if j % 2 != 0:
-            if lst[j] == "+":
-                a = queue.popleft()
-                b = queue.popleft()
-                queue.appendleft(a+b)
-            elif lst[j] == "-":
-                a = queue.popleft()
-                b = queue.popleft()
-                queue.appendleft(a-b)
-            elif lst[j] == "*":
-                a = queue.popleft()
-                b = queue.popleft()
-                queue.appendleft(a*b)
-            elif lst[j] == "/":
-                a = queue.popleft()
-                b = queue.popleft()
-                queue.appendleft(int(a/b))
-    return queue.popleft()
-
-N = int(sys.stdin.readline())
-lst = list(map(int, sys.stdin.readline().split()))
-lst1 = list(map(str, lst))
-n = 0
-for i in lst1:
-    n += len(i)
-
-cal = ['+', '-', '*', '/']
-c = list(map(int, sys.stdin.readline().split()))
-cal_lst = [0]
-for i in range(len(c)):
-    for j in range(c[i]):
-        cal_lst.append(cal[i])
-
-stack = [str(lst[0])]
-visited = [0] * (N+len(cal_lst))
-result = []
-dfs(str(lst[0]), 2)
-max_num = -1e10
-min_num = 1e10
-for i in result:
-    ans = change(i)
-    num = calculate(ans)
-    if max_num < num:
-        max_num = num
-    if min_num > num:
-        min_num = num
-
-print(int(max_num))
-print(int(min_num))
+cal(1, A[0])
+print(max_v)
+print(min_v)

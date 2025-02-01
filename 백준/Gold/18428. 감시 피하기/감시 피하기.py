@@ -1,5 +1,4 @@
 from itertools import combinations
-from collections import deque
 from copy import deepcopy
 
 N = int(input())
@@ -36,9 +35,8 @@ def avoid(new_ts):
 answer = 'NO'
 for loc in list(combinations(x, 3)):
     new_ts = deepcopy(ts)
-    q = deque(loc)
-    while q:
-        r, c = q.popleft()
+
+    for r, c in loc:
         new_ts[r][c] = 'O'
 
     if avoid(new_ts):

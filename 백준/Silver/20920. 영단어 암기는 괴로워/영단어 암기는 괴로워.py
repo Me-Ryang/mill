@@ -1,9 +1,11 @@
+import sys
 from collections import Counter
+input = sys.stdin.readline
 
-N, M = map(int, input().split())
+N, M = map(int, input().rstrip().split())
 words = []
 for _ in range(N):
-    word = input()
+    word = input().rstrip()
     if len(word) >= M:
         words.append(word)
 
